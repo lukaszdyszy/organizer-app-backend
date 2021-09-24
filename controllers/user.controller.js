@@ -1,15 +1,22 @@
 const bcrypt = require('bcrypt');
 const userModel = require("../models/user.model.js");
+const createError = require('../errors/error.js');
 
 function register (req, res, next) {
-	// const user = new userModel({
-	// 	username: req.body.username
-	// })
-	// res.status(200).send("register: to be implemented");
-	const err = new Error();
-	err.status = 405;
-	// throw err;
-	next(err);
+	bcrypt.hash(req.body.password, 10, (err, hash) => {
+		if(err){
+			next(createError(0));
+		}
+		const user = new userModel({
+			username: req.body.username,
+			password: hash
+		});
+		user.register().then(msg => {
+			res.status(200).send(msg);
+		}).catch(error => {
+			next(error);
+		})
+	})
 }
 
 function login (req, res, next) {

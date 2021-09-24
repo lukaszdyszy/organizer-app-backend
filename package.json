@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --delay 500ms index.js"
+    "start": "nodemon --delay 500ms --trace-warnings index.js"
   },
   "author": "lukaszdyszy",
   "license": "ISC",

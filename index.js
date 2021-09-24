@@ -14,11 +14,13 @@ app.use('/user', userRouter);
 app.use((req, res, next) => {
 	const error = new Error('Not Found.');
 	error.status = 404;
+	// console.log(error);
 	next(error);
 })
 
 // errors handling
 app.use((err, req, res, next) => {
+	// res.status(err.status).json({message: err.message});
 	res.status(err.status).json({message: err.message});
 })
 

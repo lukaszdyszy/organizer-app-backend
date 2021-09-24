@@ -1,5 +1,6 @@
 const mysql = require("mysql2");
 const db = require("./db");
+const DBError = require("../errors/db.error.js");
 
 class User {
 	constructor(args){
@@ -10,14 +11,20 @@ class User {
 	}
 
 	register(){
-		db.execute(
-			`INSERT INTO ${this.table} VALUES(null, ?, ?)`,
-			[this.username, this.password],
-			function(err, result){
-				if(err) throw err;
-				return result;
-			}
-		)
+		return new Promise((resolve, reject) => {
+			db.execute(
+				`INSERT INTO ${this.table} VALUES(null, ?, ?)`,
+				[this.username, this.password],
+				function(err, result){
+					if(err){
+						console.log(err);
+						reject(new DBError(err.errno));
+					} else {
+						resolve('User registered');
+					}
+				}
+			)
+		})
 	}
 }
 
