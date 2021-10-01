@@ -17,10 +17,75 @@ class User {
 				[this.username, this.password],
 				function(err, result){
 					if(err){
-						console.log(err);
 						reject(new DBError(err.errno));
 					} else {
 						resolve('User registered');
+					}
+				}
+			)
+		})
+	}
+
+	login(){
+		return new Promise((resolve, reject) => {
+			db.execute(
+				`SELECT * FROM ${this.table} WHERE username=?`,
+				[this.username],
+				function(err, result){
+					if(err){
+						reject(new DBError(err.errno));
+					} else {
+						resolve(result);
+					}
+				}
+			)
+		})
+	}
+
+	saveRefreshToken(token){
+		return new Promise((resolve, reject) => {
+			db.execute(
+				`UPDATE ${this.table} SET refresh_token=? WHERE username=?`,
+				[token, this.username],
+				function(err, result){
+					if(err){
+						reject(new DBError(err.errno));
+					} else {
+						resolve();
+					}
+				}
+			)
+		})
+	}
+
+	getRefreshToken(){
+		return new Promise((resolve, reject) => {
+			db.execute(
+				`SELECT refresh_token FROM ${this.table} WHERE id_user=?`,
+				[this.id_user],
+				function(err, result){
+					if(err){
+						console.log(err);
+						reject(new DBError(err.errno));
+					} else {
+						resolve(result);
+					}
+				}
+			)
+		})
+	}
+
+	deleteRefreshToken(){
+		return new Promise((resolve, reject) => {
+			db.execute(
+				`UPDATE ${this.table} SET refresh_token=null WHERE id_user=?`,
+				[this.id_user],
+				function(err, result){
+					if(err){
+						console.log(err);
+						reject(new DBError(err.errno));
+					} else {
+						resolve(result);
 					}
 				}
 			)
