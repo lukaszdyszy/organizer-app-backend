@@ -11,11 +11,75 @@ class Note {
 		this.id_user = args.id_user || '';
 	}
 
+	getAll(){
+		return new Promise((resolve, reject) => {
+			db.execute(
+				`SELECT * FROM ${this.table} WHERE id_user=?`,
+				[this.id_user],
+				function(err, result){
+					if(err){
+						reject(new DBError(err.errno));
+					} else {
+						resolve(result);
+					}
+				}
+			)
+		})
+	}
+
+	getById(){
+		return new Promise((resolve, reject) => {
+			db.execute(
+				`SELECT * FROM ${this.table} WHERE id_note=?`,
+				[this.id_note],
+				function(err, result){
+					if(err){
+						reject(new DBError(err.errno));
+					} else {
+						resolve(result);
+					}
+				}
+			)
+		})
+	}
+
 	add(){
 		return new Promise((resolve, reject) => {
 			db.execute(
-				`INSERT INTO ${this.table} VALUES(null, ?, ?, ?)`,
-				[this.title, this.content, this.id_user],
+				`INSERT INTO ${this.table} VALUES(null, ?, "", ?)`,
+				[this.title, this.id_user],
+				function(err, result){
+					if(err){
+						reject(new DBError(err.errno));
+					} else {
+						resolve();
+					}
+				}
+			)
+		})
+	}
+
+	setTitle(){
+		return new Promise((resolve, reject) => {
+			db.execute(
+				`UPDATE ${this.table} SET title=? WHERE id_note=?`,
+				[this.title, this.id_note],
+				function(err, result){
+					if(err){
+						reject(new DBError(err.errno));
+					} else {
+						resolve();
+					}
+				}
+			)
+		})
+	}
+
+	setContent(){
+		return new Promise((resolve, reject) => {
+			db.execute(
+				`UPDATE ${this.table} SET content=? WHERE id_note=?`,
+				[this.content, this.id_note],
 				function(err, result){
 					if(err){
 						reject(new DBError(err.errno));

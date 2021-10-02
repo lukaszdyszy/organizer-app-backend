@@ -11,8 +11,8 @@ const app = express();
 app.use(bodyParser.json());
 
 // routes
-app.use('/user', userRouter);
-app.use('/note', noteRouter);
+app.use('/users', userRouter);
+app.use('/notes', noteRouter);
 app.use((req, res, next) => {
 	const error = new Error('Not Found.');
 	error.status = 404;

@@ -17,6 +17,18 @@ function createError(code) {
 			error.status = 403;
 			error.message = 'Forbidden';
 			break;
+		case 'MISSING_PARAMETER_TITLE':
+			error.status = 422;
+			error.message = 'The title must be provided';
+			break;
+		case 'MISSING_PARAMETER_IDNOTE':
+			error.status = 422;
+			error.message = 'The title must be provided';
+			break;
+		case 'NOTE_NOT_FOUND':
+			error.status = 400;
+			error.message = 'The title must be provided';
+			break;
 		default:
 			error.status = 500;
 			error.message = 'Internal server error';

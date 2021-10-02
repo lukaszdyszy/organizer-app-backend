@@ -104,7 +104,7 @@ function logout(req, res, next) {
 
 // helpers
 function generateAuthToken(user) {
-	return jwt.sign(user, process.env.AUTH_TOKEN_SECRET, {expiresIn: '15m'});
+	return jwt.sign(user, process.env.AUTH_TOKEN_SECRET, {expiresIn: '30d'});
 }
 function generateRefreshToken(user) {
 	return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '7d'});

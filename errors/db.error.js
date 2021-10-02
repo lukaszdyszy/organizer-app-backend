@@ -12,7 +12,7 @@ class DBError extends Error{
 				break;
 			default:
 				this.status = 500;
-				this.message = 'Something goes wrong';
+				this.message = `Something goes wrong: ${errno}`;
 				break;
 		}
 	}
