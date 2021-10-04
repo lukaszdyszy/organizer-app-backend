@@ -1,3 +1,4 @@
+require('dotenv').config();
 const bcrypt = require('bcrypt');
 const userModel = require("../models/user.model.js");
 const createError = require('../errors/error.js');
@@ -104,10 +105,10 @@ function logout(req, res, next) {
 
 // helpers
 function generateAuthToken(user) {
-	return jwt.sign(user, process.env.AUTH_TOKEN_SECRET, {expiresIn: '30d'});
+	return jwt.sign(user, process.env.AUTH_TOKEN_SECRET, {expiresIn: process.env.AUTH_TOKEN_EXPIRE});
 }
 function generateRefreshToken(user) {
-	return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '7d'});
+	return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {expiresIn: process.env.REFRESH_TOKEN_EXPIRE});
 }
 
 function createUserPayload(user){
