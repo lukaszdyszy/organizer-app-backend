@@ -80,9 +80,42 @@ async function updateNote(req, res, next) {
 	}
 }
 
+async function deleteNote(req, res, next) {
+	try {
+		const note = new noteModel({
+			id_note: req.params.id
+		});
+
+		// check if note exists
+		const result = await note.getById();
+		if(result.length===0){
+			next(createError('NOTE_NOT_FOUND'));
+			return;
+		}
+		note.id_user=result[0].id_user;
+
+		// authorize user
+		if(note.id_user !== req.user.id_user){
+			next(createError('UNAUTHORIZED'));
+			return;
+		}
+	
+		// delete note
+		note.delete().then(() => {
+			res.status(200).json({message: 'Success'});
+		}).catch(error => {
+			next(error);
+		});
+	} catch (error) {
+		console.log(error);
+		next(createError(0));
+	}
+}
+
 
 module.exports = {
 	getNotes,
 	createNote,
-	updateNote
+	updateNote,
+	deleteNote
 }

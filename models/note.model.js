@@ -90,6 +90,22 @@ class Note {
 			)
 		})
 	}
+
+	delete(){
+		return new Promise((resolve, reject) => {
+			db.execute(
+				`DELETE FROM ${this.table} WHERE id_note=?`,
+				[this.id_note],
+				function(err, result){
+					if(err){
+						reject(new DBError(err.errno));
+					} else {
+						resolve();
+					}
+				}
+			)
+		})
+	}
 }
 
 module.exports = Note;

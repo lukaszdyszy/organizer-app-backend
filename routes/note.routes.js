@@ -12,4 +12,7 @@ router.post('/', authorizeUser, noteController.createNote);
 // Create new note
 router.patch('/:id', authorizeUser, noteController.updateNote);
 
+// Delete note
+router.delete('/:id', authorizeUser, noteController.deleteNote);
+
 module.exports = router;
