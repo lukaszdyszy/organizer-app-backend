@@ -27,7 +27,11 @@ function createError(code) {
 			break;
 		case 'NOTE_NOT_FOUND':
 			error.status = 400;
-			error.message = 'The title must be provided';
+			error.message = 'Note not found';
+			break;
+		case 'TODO_NOT_FOUND':
+			error.status = 400;
+			error.message = 'Todo not found';
 			break;
 		default:
 			error.status = 500;
