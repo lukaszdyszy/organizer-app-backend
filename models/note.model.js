@@ -1,6 +1,5 @@
 const mysql = require("mysql2");
 const db = require("./db");
-const DBError = require("../errors/db.error.js");
 
 class Note {
 	constructor(args){
@@ -18,7 +17,7 @@ class Note {
 				[this.id_user],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
 						resolve(result);
 					}
@@ -34,7 +33,7 @@ class Note {
 				[this.id_note],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
 						resolve(result);
 					}
@@ -50,9 +49,9 @@ class Note {
 				[this.title, this.id_user],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
-						resolve();
+						resolve(result);
 					}
 				}
 			)
@@ -66,9 +65,9 @@ class Note {
 				[this.title, this.id_note],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
-						resolve();
+						resolve(result);
 					}
 				}
 			)
@@ -82,9 +81,9 @@ class Note {
 				[this.content, this.id_note],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
-						resolve();
+						resolve(result);
 					}
 				}
 			)
@@ -98,9 +97,9 @@ class Note {
 				[this.id_note],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
-						resolve();
+						resolve(result);
 					}
 				}
 			)

@@ -23,7 +23,12 @@ app.use((req, res, next) => {
 
 // errors handling
 app.use((err, req, res, next) => {
-	res.status(err.status).json({message: err.message});
+	if(!err.status){
+		console.log(err);
+		res.status(500).json({message: 'Internal server error'});
+	} else {
+		res.status(err.status).json({message: err.message});
+	}
 });
 
 app.listen(PORT, () => {

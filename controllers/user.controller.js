@@ -4,31 +4,32 @@ const userModel = require("../models/user.model.js");
 const createError = require('../errors/error.js');
 const jwt = require('jsonwebtoken');
 
-function register (req, res, next) {
-	let {username, password} = req.body;
-	if(username.length < 6 || username.length > 20){ // username validation
-		next(createError('INVALID_USERNAME'));
-		return;
-	}
-	if(!password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&*?]).{8,}/g)){ // password validation
-		next(createError('INVALID_PASSWORD'));
-		return;
-	}
-	bcrypt.hash(req.body.password, 10, (err, hash) => { // hash password
-		if(err){
-			next(createError(0));
-			return;
+async function register (req, res, next) {
+	try {
+		let {username, password} = req.body;
+		if(username.length < 6 || username.length > 20){ // username validation
+			throw createError('INVALID_USERNAME');
 		}
+		if(!password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&*?]).{8,}/g)){ // password validation
+			throw createError('INVALID_PASSWORD');
+		}
+
+		let hash = await bcrypt.hash(req.body.password, 10);
+
 		const user = new userModel({
 			username: req.body.username,
 			password: hash
 		});
-		user.register().then(msg => {
-			res.status(200).json({message: msg});
-		}).catch(error => {
-			next(error);
-		})
-	})
+
+		await user.register();
+
+		res.status(200).json({message: 'User registred successfully'});
+	} catch (error) {
+		if(error.errno===1062){
+			error = createError('USERNAME_TAKEN');
+		}
+		next(error);
+	}
 }
 
 function login (req, res, next) {

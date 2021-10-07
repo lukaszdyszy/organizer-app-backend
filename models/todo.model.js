@@ -1,6 +1,5 @@
 const mysql = require("mysql2");
 const db = require("./db");
-const DBError = require("../errors/db.error.js");
 
 class Todo {
 	constructor(args){
@@ -18,7 +17,7 @@ class Todo {
 				[this.id_user],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
 						resolve(result);
 					}
@@ -34,7 +33,7 @@ class Todo {
 				[this.id_todo],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
 						resolve(result);
 					}
@@ -50,7 +49,7 @@ class Todo {
 				[this.title, this.id_user],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
 						resolve(result);
 					}
@@ -66,7 +65,7 @@ class Todo {
 				[this.id_todo],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
 						resolve(result);
 					}
@@ -82,7 +81,7 @@ class Todo {
 				[this.title, this.id_todo],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
 						resolve(result);
 					}
@@ -98,7 +97,7 @@ class Todo {
 				[this.id_todo],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
 						resolve(result);
 					}

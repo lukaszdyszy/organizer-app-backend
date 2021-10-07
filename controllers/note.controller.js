@@ -3,64 +3,41 @@ const noteModel = require("../models/note.model.js");
 const createError = require('../errors/error.js');
 const jwt = require('jsonwebtoken');
 
-function getNotes(req, res, next) {
+async function getNotes(req, res, next) {
 	try {
 		const note = new noteModel({
 			id_user: req.user.id_user
 		});
 	
-		note.getAll().then(result => {
-			res.status(200).json(result);
-		}).catch(error => {
-			next(error);
-		});
+		let results = await note.getAll();
+
+		res.status(200).json(results);
 	} catch (error) {
-		console.log(error);
-		next(createError(0));
+		next(error);
 	}
 }
 
-function createNote(req, res, next) {
+async function createNote(req, res, next) {
 	try {
 		if(!req.body.title){
-			next(createError('MISSING_PARAMETER_TITLE'));
-			return;
+			throw createError('MISSING_PARAMETER_TITLE');
 		}
 		const note = new noteModel({
 			id_user: req.user.id_user,
 			title: req.body.title
 		});
 	
-		note.add().then(() => {
-			res.status(200).json({message: 'Success'});
-		}).catch(error => {
-			next(error);
-		});
+		await note.add();
+
+		res.status(200).json({message: 'Note created successfully'});
 	} catch (error) {
-		console.log(error);
-		next(createError(0));
+		next(error);
 	}
 }
 
 async function updateNote(req, res, next) {
 	try {
-		const note = new noteModel({
-			id_note: req.params.id
-		});
-
-		// check if note exists
-		const result = await note.getById();
-		if(result.length===0){
-			next(createError('NOTE_NOT_FOUND'));
-			return;
-		}
-		note.id_user=result[0].id_user;
-
-		// authorize user
-		if(note.id_user !== req.user.id_user){
-			next(createError('UNAUTHORIZED'));
-			return;
-		}
+		const note = await isEditionPossible(req.user.id_user, req.params.id);
 
 		// update title
 		if(req.body.title){
@@ -73,43 +50,45 @@ async function updateNote(req, res, next) {
 			await note.setContent();
 		}
 		
-		res.status(200).json({message: 'Success'});
+		res.status(200).json({message: 'Note updated successfully'});
 	} catch (error) {
-		console.log(error);
-		next(createError(0));
+		next(error);
 	}
 }
 
 async function deleteNote(req, res, next) {
 	try {
-		const note = new noteModel({
-			id_note: req.params.id
-		});
-
-		// check if note exists
-		const result = await note.getById();
-		if(result.length===0){
-			next(createError('NOTE_NOT_FOUND'));
-			return;
-		}
-		note.id_user=result[0].id_user;
-
-		// authorize user
-		if(note.id_user !== req.user.id_user){
-			next(createError('UNAUTHORIZED'));
-			return;
-		}
+		const note = await isEditionPossible(req.user.id_user, req.params.id);
 	
-		// delete note
-		note.delete().then(() => {
-			res.status(200).json({message: 'Success'});
-		}).catch(error => {
-			next(error);
-		});
+		await note.delete();
+
+		res.status(200).json({message: 'Note deleted successfully'});
 	} catch (error) {
-		console.log(error);
-		next(createError(0));
+		next(error);
 	}
+}
+
+
+
+// helpers
+async function isEditionPossible(userid, noteid){
+	const note = new noteModel({
+		id_note: noteid
+	});
+
+	// check if note exists
+	const result = await note.getById();
+	if(result.length===0){
+		throw createError('NOTE_NOT_FOUND');
+	}
+	note.id_user=result[0].id_user;
+
+	// authorize user
+	if(note.id_user !== userid){
+		throw createError('UNAUTHORIZED');
+	}
+
+	return note;
 }
 
 

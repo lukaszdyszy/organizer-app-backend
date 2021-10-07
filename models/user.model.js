@@ -1,6 +1,5 @@
 const mysql = require("mysql2");
 const db = require("./db");
-const DBError = require("../errors/db.error.js");
 
 class User {
 	constructor(args){
@@ -13,13 +12,13 @@ class User {
 	register(){
 		return new Promise((resolve, reject) => {
 			db.execute(
-				`INSERT INTO ${this.table} VALUES(null, ?, ?)`,
+				`INSERT INTO ${this.table} VALUES(null, ?, ?, null)`,
 				[this.username, this.password],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
-						resolve('User registered');
+						resolve(result);
 					}
 				}
 			)
@@ -33,7 +32,7 @@ class User {
 				[this.username],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
 						resolve(result);
 					}
@@ -49,9 +48,9 @@ class User {
 				[token, this.username],
 				function(err, result){
 					if(err){
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
-						resolve();
+						resolve(result);
 					}
 				}
 			)
@@ -65,8 +64,7 @@ class User {
 				[this.id_user],
 				function(err, result){
 					if(err){
-						console.log(err);
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
 						resolve(result);
 					}
@@ -82,8 +80,7 @@ class User {
 				[this.id_user],
 				function(err, result){
 					if(err){
-						console.log(err);
-						reject(new DBError(err.errno));
+						reject(err);
 					} else {
 						resolve(result);
 					}

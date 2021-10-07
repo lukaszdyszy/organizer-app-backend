@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const todoModel = require("../models/todo.model.js");
 const createError = require('../errors/error.js');
-const jwt = require('jsonwebtoken');
 
 async function getTodos(req, res, next) {
 	try {
@@ -26,7 +25,7 @@ async function createTodo(req, res, next) {
 
 		await todo.add();
 
-		res.status(200).json({message: 'Success'});
+		res.status(200).json({message: 'Todo created successfully'});
 	} catch (error) {
 		next(error);
 	}
@@ -36,9 +35,9 @@ async function toggle(req, res, next) {
 	try {
 		const todo = await isEditionPossible(req.user.id_user, req.params.id);
 
-		await todo.toggleDone();
+		let results = await todo.toggleDone();
 
-		res.status(200).json({message: 'Success'});
+		res.status(200).json({message: 'Todo toggled successfully'});
 	} catch (error) {
 		next(error);
 	}
@@ -51,7 +50,7 @@ async function edit(req, res, next) {
 		todo.title = req.body.title;
 		await todo.changeTitle();
 
-		res.status(200).json({message: 'Success'});
+		res.status(200).json({message: 'Todo edited successfully'});
 	} catch (error) {
 		next(error);
 	}
@@ -63,7 +62,7 @@ async function deleteTodo(req, res, next) {
 
 		await todo.delete();
 
-		res.status(200).json({message: 'Success'});
+		res.status(200).json({message: 'Todo deleted successfully'});
 	} catch (error) {
 		next(error);
 	}

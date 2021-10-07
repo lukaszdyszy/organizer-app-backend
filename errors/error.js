@@ -9,6 +9,10 @@ function createError(code) {
 			error.status = 400;
 			error.message = 'Invalid password (must contain at least 8 characters, lowercase, uppercase, number and special character)';
 			break;
+		case 'USERNAME_TAKEN':
+			error.status = 400;
+			error.message = 'Username already exists';
+			break;
 		case 'AUTHENTICATION_FAILED':
 			error.status = 401;
 			error.message = 'Invalid username or password';
